@@ -1,7 +1,6 @@
 package com.example.backend.controller;
 
 import com.example.backend.service.UserService;
-import com.example.backend.controller.UserController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

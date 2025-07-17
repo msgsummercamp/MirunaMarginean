@@ -40,7 +40,7 @@ class UserControllerTests {
     }
 
     @Test
-    void getAllUsers_returnsUsersAndStatusOk() throws Exception {
+    void getAllUsers_shouldReturnUsersAndStatusOk_whenUsersExist() throws Exception {
         mockMvc.perform(get("/users"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))

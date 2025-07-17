@@ -2,7 +2,6 @@ package com.example.backend.service;
 
 import com.example.backend.model.User;
 import com.example.backend.repository.UserRepository;
-import com.example.backend.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
@@ -27,7 +26,7 @@ class UserServiceTests {
     ArgumentCaptor<User> userCaptor;
 
     @Test
-    void createUser_savesUser() {
+    void createUser_shouldSaveUser_whenValidInput() {
         userService.createUser(1L, "john_doe", "password123");
 
         verify(userRepository).save(userCaptor.capture());
@@ -38,13 +37,13 @@ class UserServiceTests {
     }
 
     @Test
-    void deleteUser_deletesById() {
+    void deleteUser_shouldDeleteUser_whenIdExists() {
         userService.deleteUser(42L);
         verify(userRepository).deleteById(42L);
     }
 
     @Test
-    void getUser_returnsCorrectUser() {
+    void getUser_shouldReturnUser_whenUserExists() {
         User mockUser = new User(5L, "test_user", "secret");
         when(userRepository.findById(5L)).thenReturn(mockUser);
 
@@ -55,7 +54,7 @@ class UserServiceTests {
     }
 
     @Test
-    void findAll_returnsAllUsers() {
+    void findAll_shouldReturnAllUsers_whenUsersExist() {
         List<User> users = Arrays.asList(
                 new User(1L, "john", "a"),
                 new User(2L, "jane", "b")
