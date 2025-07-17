@@ -11,6 +11,7 @@
 
 # Maven
 target/
+**/target/
 !.mvn/wrapper/maven-wrapper.jar
 
 # Build output
