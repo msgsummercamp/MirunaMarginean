@@ -18,7 +18,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.net.URL;
 
-@Component
+@Service
 public class PdfGenerationService {
 
     @Value("${pdf.text}")
