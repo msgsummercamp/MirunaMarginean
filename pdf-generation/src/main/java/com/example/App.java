@@ -10,7 +10,7 @@ public class App {
                 new AnnotationConfigApplicationContext(AppConfig.class);
 
         PdfGenerationService pdfService = context.getBean(PdfGenerationService.class);
-//        pdfService.generatePdfToFile("D:/Facultate/Practica/MirunaMarginean/pdf-generation/src/main/resources/pdfs/generated.pdf");
+        pdfService.generatePdfToFile("D:/Facultate/Practica/MirunaMarginean/pdf-generation/src/main/resources/pdfs/generated.pdf");
         pdfService.addTextToExistingPdf(
                 "pdfs/generated.pdf",
                 "D:/Facultate/Practica/MirunaMarginean/pdf-generation/src/main/resources/pdfs/modified.pdf",
