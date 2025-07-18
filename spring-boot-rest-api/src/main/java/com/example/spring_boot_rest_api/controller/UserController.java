@@ -9,11 +9,11 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.media.*;
 import io.swagger.v3.oas.annotations.*;
 
 
@@ -41,26 +41,33 @@ public class UserController {
             @ApiResponse(responseCode = "201", description = "User created")
     })
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public void createUser(@Valid @RequestBody UserRequest userRequest) {
-        userService.createUser(userRequest.getUsername(), userRequest.getEmail(), userRequest.getPassword(), userRequest.getFirstname(), userRequest.getLastname());
+    public ResponseEntity<Void> createUser(@Valid @RequestBody UserRequest userRequest) {
+        userService.createUser(
+                userRequest.getUsername(),
+                userRequest.getEmail(),
+                userRequest.getPassword(),
+                userRequest.getFirstname(),
+                userRequest.getLastname()
+        );
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @Operation(summary = "Update a user")
-    @PutMapping
-    public User updateUser(@RequestParam Long id, @Valid @RequestBody UserRequest userRequest) {
+    @PutMapping("/update/{id}")
+    public User updateUser(@PathVariable Long id, @Valid @RequestBody UserRequest userRequest) {
         return userService.updateUser(id, userRequest.getUsername(), userRequest.getEmail(), userRequest.getPassword(), userRequest.getFirstname(), userRequest.getLastname());
     }
 
     @Operation(summary = "Delete a user")
-    @DeleteMapping
-    public void deleteUser(@RequestParam Long id) {
+    @DeleteMapping("/delete/{id}")
+    public void deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
     }
 
     @Operation(summary = "Patch a user")
-    @PatchMapping
-    public User patchUser(@RequestParam Long id, @Valid @RequestBody UserPatchRequest patchRequest) {
+    @PatchMapping("/patch/{id}")
+    public User patchUser(@PathVariable Long id, @Valid @RequestBody UserPatchRequest patchRequest) {
         return userService.patchUser(id, patchRequest);
     }
 }

@@ -1,5 +1,6 @@
 package com.example.spring_boot_rest_api.controller;
 
+import com.example.spring_boot_rest_api.dto.FieldError;
 import com.example.spring_boot_rest_api.exceptions.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -14,16 +15,16 @@ public class ValidationExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, List<Map<String, String>>> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        List<Map<String, String>> errors = ex.getBindingResult()
+    public ValidationErrorResponse handleValidationExceptions(MethodArgumentNotValidException ex) {
+        List<FieldError> errors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(error -> Map.of(
-                        "field", error.getField(),
-                        "defaultMessage", Objects.requireNonNull(error.getDefaultMessage())
+                .map(error -> new FieldError(
+                        error.getField(),
+                        Objects.requireNonNull(error.getDefaultMessage())
                 ))
                 .toList();
-        return Map.of("errors", errors);
+        return new ValidationErrorResponse(errors);
     }
 
     @ExceptionHandler(UserNotFoundException.class)

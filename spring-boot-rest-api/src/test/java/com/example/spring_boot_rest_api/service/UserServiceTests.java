@@ -20,7 +20,6 @@ import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.hasSize;
 
 class UserServiceTests {
@@ -59,7 +58,7 @@ class UserServiceTests {
     void getAllUsers_shouldReturnPageOfUsers() {
         List<User> users = List.of(
                 new User("alice", "alice@example.com", "pass", "Alice", "Smith"),
-                new User("bob",   "bob@example.com",   "pass", "Bob",   "Jones")
+                new User("bob", "bob@example.com", "pass", "Bob", "Jones")
         );
 
         Pageable pageable = PageRequest.of(0, 10);
