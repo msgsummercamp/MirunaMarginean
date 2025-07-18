@@ -1,17 +1,26 @@
-package com.example.spring_data_jpa.service;
+package com.example.spring_boot_rest_api.service;
 
-import com.example.spring_data_jpa.model.User;
-import com.example.spring_data_jpa.repository.UserRepository;
+import com.example.spring_boot_rest_api.dto.UserPatchRequest;
+import com.example.spring_boot_rest_api.exceptions.UserNotFoundException;
+import com.example.spring_boot_rest_api.model.User;
+import com.example.spring_boot_rest_api.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.*;
 
-import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.hasSize;
 
 class UserServiceTests {
 
@@ -46,17 +55,22 @@ class UserServiceTests {
     }
 
     @Test
-    void getAllUsers_shouldReturnListOfUsers() {
-        List<User> users = Arrays.asList(
+    void getAllUsers_shouldReturnPageOfUsers() {
+        List<User> users = List.of(
                 new User("alice", "alice@example.com", "pass", "Alice", "Smith"),
                 new User("bob", "bob@example.com", "pass", "Bob", "Jones")
         );
-        when(userRepository.findAll()).thenReturn(users);
 
-        List<User> result = userService.getAllUsers();
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<User> page = new PageImpl<>(users, pageable, users.size());
 
-        assertThat(result, hasSize(2));
-        assertThat(result.getFirst().getUsername(), is("alice"));
+        when(userRepository.findAll(any(Pageable.class)))
+                .thenReturn(page);
+
+        Page<User> result = userService.getAllUsers(pageable);
+
+        assertThat(result.getContent(), hasSize(2));
+        assertThat(result.getContent().getFirst().getUsername(), is("alice"));
     }
 
     @Test
@@ -84,12 +98,13 @@ class UserServiceTests {
     }
 
     @Test
-    void updateUser_shouldReturnNullIfUserNotFound() {
+    void updateUser_shouldThrowExceptionIfUserNotFound() {
         when(userRepository.findById(99L)).thenReturn(Optional.empty());
 
-        User result = userService.updateUser(99L, "u", "e", "p", "f", "l");
+        assertThrows(UserNotFoundException.class, () ->
+                userService.updateUser(99L, "u", "e", "p", "f", "l")
+        );
 
-        assertThat(result, is(nullValue()));
         verify(userRepository, never()).save(any());
     }
 
@@ -101,34 +116,22 @@ class UserServiceTests {
     }
 
     @Test
-    void getUserByEmail_shouldReturnCorrectUser() {
-        User user = new User(1L, "tom", "tom@example.com", "pass", "Tom", "Brown");
-        when(userRepository.findByEmail("tom@example.com")).thenReturn(Optional.of(user));
+    void patchUser_shouldUpdateFieldsIfPresent() {
+        User existing = new User(1L, "old", "old@example.com", "123", "Old", "Name");
+        when(userRepository.findById(1L)).thenReturn(Optional.of(existing));
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        Optional<User> result = userService.getUserByEmail("tom@example.com");
+        UserPatchRequest patchRequest = new UserPatchRequest();
+        patchRequest.setUsername("newUsername");
+        patchRequest.setEmail("new@example.com");
 
-        assertThat(result.isPresent(), is(true));
-        assertThat(result.get().getUsername(), is("tom"));
-    }
+        User patched = userService.patchUser(1L, patchRequest);
 
-    @Test
-    void getUserByUsername_shouldReturnCorrectUser() {
-        User user = new User(1L, "lucy", "lucy@example.com", "pass", "Lucy", "Gray");
-        when(userRepository.findByUsername("lucy")).thenReturn(Optional.of(user));
-
-        Optional<User> result = userService.getUserByUsername("lucy");
-
-        assertThat(result.isPresent(), is(true));
-        assertThat(result.get().getUsername(), is("lucy"));
-    }
-
-    @Test
-    void countUsers_shouldReturnCorrectCount() {
-        when(userRepository.countUsers()).thenReturn(5L);
-
-        long count = userService.countUsers();
-
-        assertThat(count, is(5L));
-        verify(userRepository, times(1)).countUsers();
+        assertThat(patched.getUsername(), is("newUsername"));
+        assertThat(patched.getEmail(), is("new@example.com"));
+        assertThat(patched.getPassword(), is("123"));
+        assertThat(patched.getFirstname(), is("Old"));
+        assertThat(patched.getLastname(), is("Name"));
+        verify(userRepository).save(existing);
     }
 }
