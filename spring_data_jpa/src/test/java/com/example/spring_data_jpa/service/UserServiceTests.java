@@ -75,7 +75,7 @@ class UserServiceTests {
     void updateUser_shouldModifyAndSaveUserIfExists() {
         User existing = new User(1L, "old", "old@example.com", "123", "Old", "Name");
         when(userRepository.findById(1L)).thenReturn(Optional.of(existing));
-        when(userRepository.save(existing)).thenReturn(existing); // <-- This line is important
+        when(userRepository.save(existing)).thenReturn(existing);
 
         User updated = userService.updateUser(1L, "new", "new@example.com", "456", "New", "Name");
 

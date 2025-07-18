@@ -3,14 +3,11 @@ package com.example.spring_data_jpa.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Setter
 @Entity
 @Table(name = "users")
-@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-@EqualsAndHashCode
+@Data
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

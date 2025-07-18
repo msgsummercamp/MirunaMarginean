@@ -10,10 +10,6 @@
 	</parent>
 	<groupId>com.example</groupId>
 	<artifactId>spring_data_jpa</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>spring_data_jpa</name>
-	<description>Spring Data JPA Project</description>
-	<url/>
 	<licenses>
 		<license/>
 	</licenses>
