@@ -1,6 +1,7 @@
 package com.example.spring_boot_rest_api.service;
 
 import com.example.spring_boot_rest_api.dto.UserPatchRequest;
+import com.example.spring_boot_rest_api.dto.UserRequest;
 import com.example.spring_boot_rest_api.exceptions.UserNotFoundException;
 import com.example.spring_boot_rest_api.model.User;
 import com.example.spring_boot_rest_api.repository.UserRepository;
@@ -44,9 +45,15 @@ class UserServiceTests {
 
     @Test
     void createUser_shouldSaveUser() {
-        User user = new User("john", "john@example.com", "pass123", "John", "Doe");
+        UserRequest user = new UserRequest();
 
-        userService.createUser(user.getUsername(), user.getEmail(), user.getPassword(), user.getFirstname(), user.getLastname());
+        user.setUsername("john");
+        user.setEmail("john@example.com");
+        user.setPassword("pass123");
+        user.setFirstname("John");
+        user.setLastname("Doe");
+
+        userService.createUser(user);
 
         verify(userRepository, times(1)).save(argThat(savedUser ->
                 savedUser.getUsername().equals("john") &&
@@ -86,23 +93,38 @@ class UserServiceTests {
 
     @Test
     void updateUser_shouldModifyAndSaveUserIfExists() {
-        User existing = new User(1L, "old", "old@example.com", "123", "Old", "Name");
-        when(userRepository.findById(1L)).thenReturn(Optional.of(existing));
-        when(userRepository.save(existing)).thenReturn(existing);
+        User existingUser = new User(1L, "old", "old@example.com", "123", "Old", "Name");
+        when(userRepository.findById(1L)).thenReturn(Optional.of(existingUser));
+        when(userRepository.save(existingUser)).thenReturn(existingUser);
 
-        User updated = userService.updateUser(1L, "new", "new@example.com", "456", "New", "Name");
+        UserRequest existing = new UserRequest();
+
+        existing.setUsername("new");
+        existing.setEmail("new@example.com");
+        existing.setPassword("456");
+        existing.setFirstname("New");
+        existing.setLastname("Name");
+
+        User updated = userService.updateUser(1L, existing);
 
         assertThat(updated, is(notNullValue()));
         assertThat(updated.getUsername(), is("new"));
-        verify(userRepository).save(existing);
+        verify(userRepository).save(existingUser);
     }
 
     @Test
     void updateUser_shouldThrowExceptionIfUserNotFound() {
         when(userRepository.findById(99L)).thenReturn(Optional.empty());
+        UserRequest userRequest = new UserRequest();
+
+        userRequest.setUsername("u");
+        userRequest.setEmail("e");
+        userRequest.setPassword("p");
+        userRequest.setFirstname("f");
+        userRequest.setLastname("l");
 
         assertThrows(UserNotFoundException.class, () ->
-                userService.updateUser(99L, "u", "e", "p", "f", "l")
+                userService.updateUser(99L, userRequest)
         );
 
         verify(userRepository, never()).save(any());

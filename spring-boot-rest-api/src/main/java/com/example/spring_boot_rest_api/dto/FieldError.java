@@ -1,4 +1,12 @@
 package com.example.spring_boot_rest_api.dto;
 
-public record FieldError(String field, String message) {}
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
+public class FieldError {
+    private String field;
+    private String message;
+}
 

@@ -42,13 +42,7 @@ public class UserController {
     })
     @PostMapping
     public ResponseEntity<Void> createUser(@Valid @RequestBody UserRequest userRequest) {
-        userService.createUser(
-                userRequest.getUsername(),
-                userRequest.getEmail(),
-                userRequest.getPassword(),
-                userRequest.getFirstname(),
-                userRequest.getLastname()
-        );
+        userService.createUser(userRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -56,7 +50,7 @@ public class UserController {
     @Operation(summary = "Update a user")
     @PutMapping("/update/{id}")
     public User updateUser(@PathVariable Long id, @Valid @RequestBody UserRequest userRequest) {
-        return userService.updateUser(id, userRequest.getUsername(), userRequest.getEmail(), userRequest.getPassword(), userRequest.getFirstname(), userRequest.getLastname());
+        return userService.updateUser(id, userRequest);
     }
 
     @Operation(summary = "Delete a user")

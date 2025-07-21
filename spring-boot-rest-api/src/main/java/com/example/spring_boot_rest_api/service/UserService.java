@@ -21,8 +21,14 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void createUser(String username, String email, String password, String firstname, String lastname) {
-        User user = new User(username, email, password, firstname, lastname);
+    public void createUser(UserRequest userRequest) {
+        User user = new User(
+                userRequest.getUsername(),
+                userRequest.getEmail(),
+                userRequest.getPassword(),
+                userRequest.getFirstname(),
+                userRequest.getLastname()
+        );
         userRepository.save(user);
     }
 
@@ -34,15 +40,15 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public User updateUser(Long id, String username, String email, String password, String firstname, String lastname) {
+    public User updateUser(Long id, UserRequest userRequest) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
 
-        user.setUsername(username);
-        user.setEmail(email);
-        user.setPassword(password);
-        user.setFirstname(firstname);
-        user.setLastname(lastname);
+        user.setUsername(userRequest.getUsername());
+        user.setEmail(userRequest.getEmail());
+        user.setPassword(userRequest.getPassword());
+        user.setFirstname(userRequest.getFirstname());
+        user.setLastname(user.getLastname());
         return userRepository.save(user);
     }
 
