@@ -61,9 +61,13 @@ class UserServiceTests {
         user.setFirstname("John");
         user.setLastname("Doe");
 
+        // Create a Role object and add it to a Set<Role>
         Role userRole = new Role();
         userRole.setId(1L);
         userRole.setName("USER");
+
+        user.setRoles(Set.of(userRole));
+
         when(roleRepository.findByName("USER")).thenReturn(Optional.of(userRole));
 
         userService.createUser(user);
