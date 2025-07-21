@@ -9,10 +9,9 @@ import org.mockito.*;
 
 import java.util.*;
 
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-
 
 class UserServiceTests {
 
@@ -83,7 +82,6 @@ class UserServiceTests {
         assertThat(updated.getUsername(), is("new"));
         verify(userRepository).save(existing);
     }
-
 
     @Test
     void updateUser_shouldReturnNullIfUserNotFound() {
