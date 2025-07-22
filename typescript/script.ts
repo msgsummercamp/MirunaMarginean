@@ -1,13 +1,13 @@
-const img: HTMLImageElement = document.getElementById('dogImage') as HTMLImageElement;
-const message: HTMLParagraphElement = document.getElementById('message') as HTMLParagraphElement;
-const error: HTMLParagraphElement = document.getElementById('error') as HTMLParagraphElement;
-
 interface DogApiResponse {
     message: string;
     status: 'success' | 'error';
 }
 
 function showDog(): void {
+    const img: HTMLImageElement = document.getElementById('dogImage') as HTMLImageElement;
+    const message: HTMLParagraphElement = document.getElementById('message') as HTMLParagraphElement;
+    const error: HTMLParagraphElement = document.getElementById('error') as HTMLParagraphElement;
+
     if (!img || !message || !error) return;
 
     img.classList.add('hidden');
