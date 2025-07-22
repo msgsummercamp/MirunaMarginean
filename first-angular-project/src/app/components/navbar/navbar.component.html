@@ -1,0 +1,21 @@
+<mat-toolbar color="primary" class="navbar" fixedTop>
+  <span class="logo">MyApp</span>
+
+  <span class="spacer"></span>
+
+  <a mat-button routerLink="/home">Home</a>
+  <a mat-button routerLink="/about">About</a>
+
+  <span class="spacer"></span>
+
+  <button mat-icon-button aria-label="Account">
+    <mat-icon>account_circle</mat-icon>
+  </button>
+  <button mat-icon-button aria-label="Settings">
+    <mat-icon>settings</mat-icon>
+  </button>
+</mat-toolbar>
+
+<div class="main-content">
+  <ng-content></ng-content>
+</div>
