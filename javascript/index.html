@@ -3,38 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Random Dog Gallery</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 50px;
-        }
-
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        #dogImage {
-            margin-top: 20px;
-            max-width: 500px;
-            height: auto;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-
-        #message {
-            margin-top: 20px;
-            font-style: italic;
-            color: #555;
-        }
-
-        #error {
-            color: red;
-            margin-top: 10px;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="style.css">
     <script src="script.js"></script>
 </head>
 <body>
@@ -42,11 +11,11 @@
     <h1>Random Dog Gallery</h1>
     <button onclick="showDog()">Show me a dog!</button>
 
-    <p id="message" style="display: none;">Loading...</p>
-    <p id="error" style="display: none;"></p>
+    <p id="message" class="hidden message">Loading...</p>
+    <p id="error" class="hidden error"></p>
 
     <div>
-        <img id="dogImage" src="" alt="Cute dog will appear here!" style="display:none;">
+        <img id="dogImage" class="hidden dog-image" src="" alt="Cute dog will appear here!">
     </div>
 
 </body>
