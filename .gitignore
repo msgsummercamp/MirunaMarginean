@@ -9,20 +9,33 @@
 .settings/
 .factorypath
 
-# Maven
+# VS Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Build tools
 target/
 **/target/
-!.mvn/wrapper/maven-wrapper.jar
-
-# Build output
-bin/
 build/
+bin/
+dist/
+out-tsc/
+tmp/
+bazel-out/
+.mvn/wrapper/maven-wrapper.jar
 
 # Logs
 *.log
 logs/
+libpeerconnection.log
+testem.log
+npm-debug.log
+yarn-error.log
 
-# Java
+# Compiled Java and packages
 *.class
 *.jar
 *.war
@@ -31,14 +44,26 @@ logs/
 # Spring Boot
 restart.lock
 
-# OS-specific
-.DS_Store
-Thumbs.db
+# Node
+node_modules/
 
-# Temporary files
+# Angular
+.angular/cache/
+.typings
+coverage/
+connect.lock
+
+# Sass
+.sass-cache/
+
+# Miscellaneous
 *.tmp
 *.temp
 *~
-
-# Environment files
+.DS_Store
+Thumbs.db
 .env
+.history/
+.c9/
+*.launch
+*.sublime-workspace
