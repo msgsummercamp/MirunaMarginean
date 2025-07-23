@@ -2,4 +2,9 @@
 
 <main class="main-content">
   <router-outlet></router-outlet>
+  <h1>Random Dog Gallery</h1>
+  <button (click)="showDog()">Show me a dog!</button>
+  <p *ngIf="loading()" class="message">Loading...</p>
+  <p *ngIf="errorMessage()" class="error">{{ errorMessage }}</p>
+  <img *ngIf="imageUrl()" [src]="imageUrl()" alt="Random Dog" class="dogImage" />
 </main>
