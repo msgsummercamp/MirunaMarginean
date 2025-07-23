@@ -1,6 +1,5 @@
 package com.example.spring_security.dto;
 
-import com.example.spring_security.model.Role;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,5 +13,5 @@ public class SignUpRequest {
     private String password;
     private String firstname;
     private String lastname;
-    private Set<Role> roles;
+    private Set<String> roles;
 }

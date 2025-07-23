@@ -58,10 +58,11 @@ public class UserController {
     @Operation(summary = "Update a user")
     @PutMapping("/{id}")
     public User updateUser(@PathVariable Long id, @Valid @RequestBody UserRequest userRequest) {
-        return userService.updateUser(id, userRequest);
+        userRequest.setId(id);
+        return userService.updateUser(userRequest);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Operation(summary = "Delete a user")
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id) {
@@ -71,6 +72,7 @@ public class UserController {
     @Operation(summary = "Patch a user")
     @PatchMapping("/{id}")
     public User patchUser(@PathVariable Long id, @Valid @RequestBody UserPatchRequest patchRequest) {
-        return userService.patchUser(id, patchRequest);
+        patchRequest.setId(id);
+        return userService.patchUser(patchRequest);
     }
 }

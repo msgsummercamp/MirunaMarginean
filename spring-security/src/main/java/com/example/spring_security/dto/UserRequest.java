@@ -1,6 +1,5 @@
 package com.example.spring_security.dto;
 
-import com.example.spring_security.model.Role;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -11,6 +10,8 @@ import java.util.Set;
 
 @Data
 public class UserRequest {
+
+    private Long id;
 
     @NotBlank(message = "Username is required")
     @Pattern(regexp = "^[a-zA-Z0-9]{3,15}$", message = "Username must be 3-15 alphanumeric characters")
@@ -31,5 +32,5 @@ public class UserRequest {
     private String lastname;
 
     @NotEmpty(message = "At least one role is required")
-    private Set<Role> roles;
+    private Set<String> roles;
 }

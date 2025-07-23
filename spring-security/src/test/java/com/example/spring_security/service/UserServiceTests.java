@@ -5,7 +5,6 @@ import com.example.spring_security.dto.UserRequest;
 import com.example.spring_security.exceptions.UserNotFoundException;
 import com.example.spring_security.model.Role;
 import com.example.spring_security.model.User;
-import com.example.spring_security.repository.RoleRepository;
 import com.example.spring_security.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,9 +31,6 @@ class UserServiceTests {
     private UserRepository userRepository;
 
     @Mock
-    private RoleRepository roleRepository;
-
-    @Mock
     private PasswordEncoder passwordEncoder;
 
     @InjectMocks
@@ -57,26 +53,23 @@ class UserServiceTests {
         UserRequest user = new UserRequest();
         user.setUsername("john");
         user.setEmail("john@example.com");
-        user.setPassword("pass123");
+        user.setPassword("password");
         user.setFirstname("John");
         user.setLastname("Doe");
+        user.setRoles(Set.of("ROLE_USER"));
 
-        // Create a Role object and add it to a Set<Role>
-        Role userRole = new Role();
-        userRole.setId(1L);
-        userRole.setName("USER");
-
-        user.setRoles(Set.of(userRole));
-
-        when(roleRepository.findByName("USER")).thenReturn(Optional.of(userRole));
+        when(passwordEncoder.encode("password")).thenReturn("encodedPassword");
 
         userService.createUser(user);
 
         verify(userRepository, times(1)).save(argThat(savedUser ->
                 savedUser.getUsername().equals("john") &&
                         savedUser.getEmail().equals("john@example.com") &&
+                        savedUser.getPassword().equals("encodedPassword") &&
+                        savedUser.getFirstname().equals("John") &&
+                        savedUser.getLastname().equals("Doe") &&
                         savedUser.getRoles() != null &&
-                        savedUser.getRoles().contains(userRole)
+                        savedUser.getRoles().contains(Role.ROLE_USER)
         ));
     }
 
@@ -111,22 +104,30 @@ class UserServiceTests {
 
     @Test
     void updateUser_shouldModifyAndSaveUserIfExists() {
-        User existingUser = new User(1L, "old", "old@example.com", "123", "Old", "Name");
+        User existingUser = new User(1L, "old", "old@example.com", "123", "Old", "Name", Set.of(Role.ROLE_USER));
+        when(passwordEncoder.encode("password")).thenReturn("encodedPassword");
         when(userRepository.findById(1L)).thenReturn(Optional.of(existingUser));
         when(userRepository.save(existingUser)).thenReturn(existingUser);
 
         UserRequest existing = new UserRequest();
 
+        existing.setId(1L);
         existing.setUsername("new");
         existing.setEmail("new@example.com");
-        existing.setPassword("456");
+        existing.setPassword("password");
         existing.setFirstname("New");
         existing.setLastname("Name");
+        existing.setRoles(Set.of("ROLE_USER", "ROLE_ADMIN"));
 
-        User updated = userService.updateUser(1L, existing);
+        User updated = userService.updateUser(existing);
 
         assertThat(updated, is(notNullValue()));
         assertThat(updated.getUsername(), is("new"));
+        assertThat(updated.getEmail(), is("new@example.com"));
+        assertThat(updated.getPassword(), is(passwordEncoder.encode("password")));
+        assertThat(updated.getFirstname(), is("New"));
+        assertThat(updated.getLastname(), is("Name"));
+        assertThat(updated.getRoles(), hasSize(2));
         verify(userRepository).save(existingUser);
     }
 
@@ -135,6 +136,7 @@ class UserServiceTests {
         when(userRepository.findById(99L)).thenReturn(Optional.empty());
         UserRequest userRequest = new UserRequest();
 
+        userRequest.setId(99L);
         userRequest.setUsername("u");
         userRequest.setEmail("e");
         userRequest.setPassword("p");
@@ -142,7 +144,7 @@ class UserServiceTests {
         userRequest.setLastname("l");
 
         assertThrows(UserNotFoundException.class, () ->
-                userService.updateUser(99L, userRequest)
+                userService.updateUser(userRequest)
         );
 
         verify(userRepository, never()).save(any());
@@ -157,21 +159,24 @@ class UserServiceTests {
 
     @Test
     void patchUser_shouldUpdateFieldsIfPresent() {
-        User existing = new User(1L, "old", "old@example.com", "123", "Old", "Name");
+        User existing = new User(1L, "old", "old@example.com", "password", "Old", "Name", Set.of(Role.ROLE_USER));
+        when(passwordEncoder.encode("password")).thenReturn("encodedPassword");
         when(userRepository.findById(1L)).thenReturn(Optional.of(existing));
         when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         UserPatchRequest patchRequest = new UserPatchRequest();
+        patchRequest.setId(1L);
         patchRequest.setUsername("newUsername");
         patchRequest.setEmail("new@example.com");
 
-        User patched = userService.patchUser(1L, patchRequest);
+        User patched = userService.patchUser(patchRequest);
 
         assertThat(patched.getUsername(), is("newUsername"));
         assertThat(patched.getEmail(), is("new@example.com"));
-        assertThat(patched.getPassword(), is("123"));
+        assertThat(patched.getPassword(), is("password"));
         assertThat(patched.getFirstname(), is("Old"));
         assertThat(patched.getLastname(), is("Name"));
+        assertThat(patched.getRoles(), hasSize(1));
         verify(userRepository).save(existing);
     }
 }

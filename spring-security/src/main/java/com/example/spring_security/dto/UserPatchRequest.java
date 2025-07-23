@@ -4,8 +4,12 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.util.Set;
+
 @Data
 public class UserPatchRequest {
+
+    private Long id;
 
     @Pattern(regexp = "^[a-zA-Z0-9]{3,15}$", message = "Username must be 3-15 alphanumeric characters")
     private String username;
@@ -21,4 +25,6 @@ public class UserPatchRequest {
 
     @Size(max = 255, message = "Last name must be at most 50 characters")
     private String lastname;
+
+    private Set<String> roles;
 }
