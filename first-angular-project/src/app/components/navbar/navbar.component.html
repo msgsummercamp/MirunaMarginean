@@ -17,12 +17,34 @@
   <div class="icon-group">
     <button
       mat-icon-button
-      [routerLink]="'/login'"
+      [routerLink]="'/account'"
       routerLinkActive="active-icon"
       aria-label="Account"
+      *appAuthOnly="isLoggedIn()"
     >
       <mat-icon>account_circle</mat-icon>
     </button>
+
+    @if (isLoggedIn()) {
+      <button
+        mat-icon-button
+        (click)="logout()"
+        routerLinkActive="active-icon"
+        aria-label="Login/Logout"
+      >
+        <mat-icon>logout</mat-icon>
+      </button>
+    } @else {
+      <button
+        mat-icon-button
+        [routerLink]="'/login'"
+        routerLinkActive="active-icon"
+        aria-label="Login/Logout"
+      >
+        <mat-icon>login</mat-icon>
+      </button>
+    }
+
     <button
       mat-icon-button
       [routerLink]="'/settings'"

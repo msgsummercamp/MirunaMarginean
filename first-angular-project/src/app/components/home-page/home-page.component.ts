@@ -1,4 +1,4 @@
-import { AuthOnlyDirective } from '../../directives/auth-only.directive';
+import { CapitalizePipe } from '../../pipes/capitalize.pipe';
 import { Component, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { NavbarComponent } from '../navbar/navbar.component';
@@ -11,18 +11,18 @@ type DogImageApi = {
 
 @Component({
   selector: 'app-home-page',
-  imports: [NavbarComponent, RouterOutlet, AuthOnlyDirective],
+  imports: [NavbarComponent, RouterOutlet, CapitalizePipe],
   templateUrl: './home-page.component.html',
   styleUrls: ['./home-page.component.scss'],
 })
 export class HomePageComponent {
-  private http = inject(HttpClient);
+  private readonly http = inject(HttpClient);
 
-  imageUrl = signal<string | null>(null);
-  loading = signal(false);
-  errorMessage = signal<string | null>(null);
+  public readonly imageUrl = signal<string | null>(null);
+  public readonly loading = signal(false);
+  public readonly errorMessage = signal<string | null>(null);
 
-  showDog() {
+  public showDog() {
     this.loading.set(true);
     this.errorMessage.set(null);
     this.imageUrl.set(null);
