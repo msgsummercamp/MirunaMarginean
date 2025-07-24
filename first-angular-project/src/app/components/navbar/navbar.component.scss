@@ -1,4 +1,10 @@
 .navbar {
+  font-family: Arial, sans-serif;
+  font-size: 30px;
+  font-weight: bold;
+  color: purple;
+  background-color: plum;
+  padding: 16px;
   position: fixed;
   top: 0;
   width: 100%;
@@ -12,6 +18,55 @@
 }
 
 .main-content {
-  padding: 16px;
-  padding-top: 64px;
+  padding: 64px 16px 16px;
+}
+
+.navbar a {
+  font-family: Arial, sans-serif;
+  font-size: 22px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-decoration: none;
+  color: purple;
+  display: flex;
+  align-items: center;
+}
+
+.icon-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.navbar button {
+  text-decoration: none;
+  color: purple;
+  display: flex;
+  align-items: center;
+}
+
+.navbar button.mat-icon-button {
+  width: 64px;
+  height: 64px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navbar button mat-icon {
+  font-size: 32px;
+  width: 40px;
+  height: 40px;
+  line-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.active-link,
+.active-icon {
+  color: purple !important;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
 }

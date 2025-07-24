@@ -1,19 +1,37 @@
 <mat-toolbar color="primary" class="navbar" fixedTop>
-  <span class="logo">MyApp</span>
+  <span class="logo">Random Dogs</span>
 
   <span class="spacer"></span>
 
-  <a mat-button routerLink="/home">Home</a>
-  <a mat-button routerLink="/about">About</a>
+  <a
+    mat-button
+    routerLink="/"
+    routerLinkActive="active-link"
+    [routerLinkActiveOptions]="{ exact: true }"
+    >Home</a
+  >
+  <a mat-button routerLink="/about" routerLinkActive="active-link">About</a>
 
   <span class="spacer"></span>
 
-  <button mat-icon-button aria-label="Account">
-    <mat-icon>account_circle</mat-icon>
-  </button>
-  <button mat-icon-button aria-label="Settings">
-    <mat-icon>settings</mat-icon>
-  </button>
+  <div class="icon-group">
+    <button
+      mat-icon-button
+      [routerLink]="'/login'"
+      routerLinkActive="active-icon"
+      aria-label="Account"
+    >
+      <mat-icon>account_circle</mat-icon>
+    </button>
+    <button
+      mat-icon-button
+      [routerLink]="'/settings'"
+      routerLinkActive="active-icon"
+      aria-label="Settings"
+    >
+      <mat-icon>settings</mat-icon>
+    </button>
+  </div>
 </mat-toolbar>
 
 <div class="main-content">
