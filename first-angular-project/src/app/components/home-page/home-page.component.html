@@ -1,0 +1,19 @@
+<app-navbar></app-navbar>
+
+<main class="main-content">
+  <router-outlet></router-outlet>
+  <h1>Random Dog Gallery</h1>
+  <button (click)="showDog()">{{ 'Show dog' | capitalize }}</button>
+
+  @if (loading()) {
+    <p class="message"> Loading... </p>
+  }
+
+  @if (errorMessage()) {
+    <p class="error">{{ errorMessage() }}</p>
+  }
+
+  @if (imageUrl(); as url) {
+    <img [src]="url" alt="Random Dog" class="dogImage" />
+  }
+</main>
