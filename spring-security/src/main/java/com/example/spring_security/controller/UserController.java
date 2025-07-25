@@ -50,9 +50,15 @@ public class UserController {
     }
 
     @Operation(summary = "Get a user")
-    @GetMapping("/{id}")
-    public User getUser(@PathVariable Long id) {
+    @GetMapping("/id/{id}")
+    public User getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
+    }
+
+    @Operation(summary = "Get a user by username")
+    @GetMapping("/username/{username}")
+    public User getUserByUsername(@PathVariable String username) {
+        return userService.getUserByUsername(username);
     }
 
     @Operation(summary = "Update a user")
