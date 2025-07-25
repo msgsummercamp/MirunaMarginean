@@ -1,8 +1,11 @@
 import { CapitalizePipe } from '../../pipes/capitalize.pipe';
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { RouterOutlet } from '@angular/router';
+import { Page, User } from '../../services/auth.types';
+import { AuthOnlyDirective } from '../../directives/auth-only.directive';
+import { AuthService } from '../../services/auth.service';
 
 type DogImageApi = {
   message: string;
@@ -11,12 +14,15 @@ type DogImageApi = {
 
 @Component({
   selector: 'app-home-page',
-  imports: [NavbarComponent, RouterOutlet, CapitalizePipe],
+  imports: [NavbarComponent, RouterOutlet, CapitalizePipe, AuthOnlyDirective],
   templateUrl: './home-page.component.html',
   styleUrls: ['./home-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomePageComponent {
   private readonly http = inject(HttpClient);
+  authService = inject(AuthService);
+  isLoggedIn = this.authService.isAuthenticatedSignal;
 
   public readonly imageUrl = signal<string | null>(null);
   public readonly loading = signal(false);
@@ -37,5 +43,13 @@ export class HomePageComponent {
         this.loading.set(false);
       },
     });
+  }
+
+  public getUsers() {
+    this.http
+      .get<Page<User>>('http://localhost:8080/users?page=0&size=10')
+      .subscribe((response) => {
+        //TODO afiseaza users
+      });
   }
 }

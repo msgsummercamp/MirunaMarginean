@@ -2,8 +2,8 @@
   font-family: Arial, sans-serif;
   font-size: 30px;
   font-weight: bold;
-  color: #d6d4e0;
-  background-color: #5b9aa0;
+  color: #f4f4f4;
+  background-color: #c36a2d;
   padding: 16px;
   position: fixed;
   top: 0;
@@ -18,7 +18,7 @@
 }
 
 .main-content {
-  padding: 64px 16px 16px;
+  margin-bottom: 64px;
 }
 
 .navbar a {
@@ -27,7 +27,7 @@
   font-weight: bold;
   letter-spacing: 1px;
   text-decoration: none;
-  color: #d6d4e0;
+  color: #f4f4f4;
   display: flex;
   align-items: center;
 }
@@ -40,7 +40,7 @@
 
 .navbar button {
   text-decoration: none;
-  color: #d6d4e0;
+  color: #f4f4f4;
   display: flex;
   align-items: center;
 }
@@ -66,7 +66,7 @@
 
 .active-link,
 .active-icon {
-  color: #d6d4e0 !important;
+  color: #f4f4f4 !important;
   background-color: rgba(255, 255, 255, 0.2);
   border-radius: 8px;
 }

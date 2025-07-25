@@ -1,5 +1,6 @@
 package com.example.spring_security.security;
 
+import com.example.spring_security.model.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;

@@ -2,7 +2,7 @@
 
 <main class="main-content">
   <router-outlet></router-outlet>
-  <form novalidate [formGroup]="loginFormGroup" (ngSubmit)="onFormSubmit()">
+  <form novalidate class="loginForm" [formGroup]="loginFormGroup" (ngSubmit)="onFormSubmit()">
     <h1>Log in</h1>
 
     <label for="email"> Email </label>
@@ -14,6 +14,15 @@
       }
       @if (email.errors?.['email']) {
         <small class="text-error">Enter a valid email address.</small>
+      }
+    }
+
+    <label for="username"> Username </label>
+    <input type="text" id="username" placeholder="user.example" formControlName="username" />
+
+    @if (isFormControlInvalid(username)) {
+      @if (username.errors?.['required']) {
+        <small class="text-error">Username is required.</small>
       }
     }
 
@@ -33,6 +42,10 @@
           </small>
         }
       </div>
+    }
+
+    @if (loginError()) {
+      <small class="text-error">{{ loginError() }}</small>
     }
 
     <button type="submit"> {{ 'Log in' | capitalize }} </button>

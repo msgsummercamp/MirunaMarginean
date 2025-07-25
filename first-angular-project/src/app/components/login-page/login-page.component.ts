@@ -1,6 +1,6 @@
 import { AuthService } from '../../services/auth.service';
 import { CapitalizePipe } from '../../pipes/capitalize.pipe';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { NavbarComponent } from '../navbar/navbar.component';
 import {
   AbstractControl,
@@ -9,10 +9,11 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 
 type LoginForm = {
   email: FormControl<string>;
+  username: FormControl<string>;
   password: FormControl<string>;
 };
 
@@ -24,28 +25,50 @@ type LoginForm = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginPageComponent {
+  private router = inject(Router);
   private readonly _authService = inject(AuthService);
   private readonly _formBuilder = inject(NonNullableFormBuilder);
+  public loginError = signal<string | null>(null);
 
   public login() {
-    this._authService.login();
+    this._authService.login(this.username.value, this.password.value).subscribe({
+      next: (res) => {
+        const token = res.token;
+        localStorage.setItem('token', token);
+        this.router.navigate(['']).then(() => this._authService.isAuthenticatedSignal.set(true));
+      },
+      error: (err) => {
+        if (err.status === 401) {
+          this.loginError.set('Invalid username or password.');
+        } else {
+          this.loginError.set('Something went wrong. Please try again later.');
+        }
+      },
+    });
   }
 
   public readonly loginFormGroup = this._formBuilder.group<LoginForm>({
     email: this._formBuilder.control('', {
       validators: [Validators.required, Validators.email],
     }),
+    username: this._formBuilder.control('', {
+      validators: [Validators.required],
+    }),
     password: this._formBuilder.control('', {
       validators: [Validators.required, Validators.minLength(8)],
     }),
   });
 
-  isFormControlInvalid(control: AbstractControl) {
+  public isFormControlInvalid(control: AbstractControl) {
     return control.invalid && control.touched;
   }
 
   public get email() {
     return this.loginFormGroup.controls.email;
+  }
+
+  public get username() {
+    return this.loginFormGroup.controls.username;
   }
 
   public get password() {
@@ -54,8 +77,7 @@ export class LoginPageComponent {
 
   public onFormSubmit(): void {
     if (this.loginFormGroup.valid) {
-      console.log('getRawValue():', this.loginFormGroup.getRawValue());
-      console.log('value:', this.loginFormGroup.value);
+      this.login();
     }
   }
 }
